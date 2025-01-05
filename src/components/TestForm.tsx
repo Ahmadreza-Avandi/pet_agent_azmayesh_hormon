@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { 
-  TextField, 
-  Button, 
-  MenuItem, 
-  Grid, 
+import {
+  TextField,
+  Button,
+  MenuItem,
+  Grid,
   Paper,
   Typography,
   Alert,
@@ -24,6 +24,10 @@ export function TestForm() {
   const [result, setResult] = useState<string | null>(null);
   const [testResults, setTestResults] = useState<TestResult[]>([]);
 
+  // اضافه کردن state برای واحد سن و وزن
+  const [ageUnit, setAgeUnit] = useState<'month' | 'year'>('month'); // واحد سن
+  const [weightUnit, setWeightUnit] = useState<'kg' | 'g'>('kg'); // واحد وزن
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -35,7 +39,9 @@ export function TestForm() {
       const data = {
         animalType: formData.get('animalType') as string,
         age: Number(formData.get('age')),
+        ageUnit: ageUnit, // واحد سن
         weight: Number(formData.get('weight')),
+        weightUnit: weightUnit, // واحد وزن
         gender: formData.get('gender') as string,
         symptoms: formData.get('symptoms') as string,
         testResults: testResults.filter(test => test.value !== ''),
@@ -87,28 +93,61 @@ export function TestForm() {
                 </TextField>
               </Grid>
 
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="سن (ماه)"
-                  name="age"
-                  type="number"
-                  required
-                  fullWidth
-                  InputProps={{ inputProps: { min: 0 } }}
-                />
+              {/* ورودی سن و واحد سن */}
+              <Grid item xs={12} sm={6} container spacing={1}>
+                <Grid item xs={8}>
+                  <TextField
+                    label="سن"
+                    name="age"
+                    type="number"
+                    required
+                    fullWidth
+                    InputProps={{ inputProps: { min: 0 } }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    select
+                    label="واحد سن"
+                    value={ageUnit}
+                    onChange={(e) => setAgeUnit(e.target.value as 'month' | 'year')}
+                    required
+                    fullWidth
+                  >
+                    <MenuItem value="month">ماه</MenuItem>
+                    <MenuItem value="year">سال</MenuItem>
+                  </TextField>
+                </Grid>
               </Grid>
 
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="وزن (کیلوگرم)"
-                  name="weight"
-                  type="number"
-                  required
-                  fullWidth
-                  InputProps={{ inputProps: { min: 0, step: "0.1" } }}
-                />
+              {/* ورودی وزن و واحد وزن */}
+              <Grid item xs={12} sm={6} container spacing={1}>
+                <Grid item xs={8}>
+                  <TextField
+                    label="وزن"
+                    name="weight"
+                    type="number"
+                    required
+                    fullWidth
+                    InputProps={{ inputProps: { min: 0, step: "0.1" } }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    select
+                    label="واحد وزن"
+                    value={weightUnit}
+                    onChange={(e) => setWeightUnit(e.target.value as 'kg' | 'g')}
+                    required
+                    fullWidth
+                  >
+                    <MenuItem value="kg">کیلوگرم</MenuItem>
+                    <MenuItem value="g">گرم</MenuItem>
+                  </TextField>
+                </Grid>
               </Grid>
 
+              {/* ورودی جنسیت */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   select
